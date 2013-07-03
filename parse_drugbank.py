@@ -122,7 +122,7 @@ drugbank_names = [
     rec[0] for rec in conn.execute(sa.select([drugbank_name.c.name]))]
 
 sm_filename = os.path.join(os.path.dirname(sys.argv[0]),
-                           'small_molecule.130624M134120.tsv')
+                           'small_molecule.130621F155906.tsv')
 sm_file = open(sm_filename, 'rb')
 sm_reader = csv.reader(sm_file, dialect='excel-tab')
 sm_fields = [f.lower().replace(' ', '_') for f in sm_reader.next()]
