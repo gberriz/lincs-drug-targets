@@ -1,5 +1,6 @@
 import re
 from bioservices import KeggParser
+import lazydict as ld
 
 _KP = KeggParser(verbose=False)
 
@@ -8,11 +9,11 @@ def _fetch_drug(drug_id):
     return _KP.parse(_KP.get(drug_id))
 
 
-def fetch_drug(drug_id=None, memo=dict(), _reset=False):
+def fetch_drug(drug_id=None, _memo=ld.LazyDict(), _reset=False):
     if _reset:
         assert drug_id is None
-        return memo.clear()
-    return memo.setdefault(drug_id, _fetch_drug(drug_id))
+        return _memo.clear()
+    return _memo.setdefault(drug_id, lambda: _fetch_drug(drug_id))
 
 
 def fetch_raw_targets(drug_id):
@@ -53,8 +54,8 @@ def _fetch_uniprot(kegg_id):
     return _KP.parse(_KP.get(kegg_id))['dblinks']['UniProt:'].split()
 
 
-def fetch_uniprot(kegg_id=None, memo=dict(), _reset=False):
+def fetch_uniprot(kegg_id=None, _memo=ld.LazyDict(), _reset=False):
     if _reset:
         assert kegg_id is None
-        return memo.clear()
-    return memo.setdefault(kegg_id, _fetch_uniprot(kegg_id))
+        return _memo.clear()
+    return _memo.setdefault(kegg_id, lambda: _fetch_uniprot(kegg_id))

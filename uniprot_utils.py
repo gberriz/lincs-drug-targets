@@ -1,4 +1,5 @@
 from bioservices import UniProt
+import lazydict as ld
 
 _UP = UniProt(verbose=False)
 
@@ -8,8 +9,8 @@ def _fetch_name(uniprot):
     return ret[0]
 
 
-def fetch_name(uniprot=None, _memo=dict(), _reset=False):
+def fetch_name(uniprot=None, _memo=ld.LazyDict(), _reset=False):
     if _reset:
         assert uniprot is None
         return _memo.clear()
-    return _memo.setdefault(uniprot, _fetch_name(uniprot))
+    return _memo.setdefault(uniprot, lambda: _fetch_name(uniprot))
